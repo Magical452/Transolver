@@ -1,106 +1,51 @@
-# Transolver (ICML 2024 Spotlight)
+# Reproducible Inference on AI Makerspace for Transolver
 
-:triangular_flag_on_post:**News** (2026.02) We present a new member of the Transolver Family, named [Transolver-3](https://arxiv.org/pdf/2602.04940), which can handle **100-million-scale** geometries with SOTA results in full-size DrivAerML.
+## Deacription
+- Task: predict surface pressure and surrounding velocity for cars, plus drag coefficient.
+- Model: Transolver. No pretrained weights were released, so the model was trained here.
+- My work: `Car-Design-ShapeNetCar/`, `jobs/`, `logs/`, this README.
 
-:triangular_flag_on_post:**News** (2025.07) We have released the code of [Transolver++](https://arxiv.org/abs/2502.02414v1). Please check this [GitHub Repository](https://github.com/thuml/Transolver_plus).
+## 2. Provenance
+- Source repo: https://github.com/thuml/Transolver
+- Upstream commit: <PASTE git rev-parse HEAD>
+- Dataset: http://www.nobuyuki-umetani.com/publication/mlcfd_data.zip (2,029,047,879 bytes)
+  (Umetani and Bickel, SIGGRAPH 2018)
+- Weights: none released by the authors; trained by me (see section 5).
+- Paper: https://arxiv.org/abs/2402.02366
 
-:triangular_flag_on_post:**News** (2025.04) We have released [Neural-Solver-Library](https://github.com/thuml/Neural-Solver-Library) as a simple and neat code base for PDE solving. It contains 17 well-reproduced neural solvers. Welcome to try this library and join the research in solving PDEs.
+## 3. Environment
+- Cluster: PACE ICE, login node <hostname>
+- Modules: <module list>
+- Python: <version>; conda env created with: <command>
+- Packages: see `requirements-frozen.txt` (from `pip freeze`)
+- Setup commands: <exact commands>
 
-:triangular_flag_on_post:**News** (2025.02) We present an upgraded version of Transolver, named [Transolver++](https://arxiv.org/abs/2502.02414v1), which can handle million-scale geometries in one GPU with more accurate results.
+## 4. Data preparation
+<download, unzip, data_dir and save_dir paths, preprocessing command>
 
-:triangular_flag_on_post:**News** (2024.10) Transolver has been integrated into [NVIDIA physicsnemo](https://github.com/NVIDIA/physicsnemo/tree/main/examples/cfd/darcy_transolver).
+## 5. Training
+- Script: `jobs/train.sbatch`
+- Resources: <GPU type, CPUs, memory, wall time>
+- Key arguments: <nb_epochs, lr, batch_size>
+- Log: `logs/<file>`
 
-Transolver: A Fast Transformer Solver for PDEs on General Geometries [[Paper]](https://arxiv.org/abs/2402.02366) [[Slides]](https://wuhaixu2016.github.io/pdf/ICML2024_Transolver.pdf) [[Poster]](https://wuhaixu2016.github.io/pdf/poster_ICML2024_Transolver.pdf)
+## 6. Evaluation (inference)
+- Script: `jobs/eval.sbatch`
+- Log: `logs/<file>`
+- Outputs: <metrics files, plots>
 
-In real-world applications, PDEs are typically discretized into large-scale meshes with complex geometries. To capture intricate physical correlations hidden under multifarious meshes, we propose the Transolver with the following features:
+## 7. Validation
+<my metrics vs. paper's reported numbers, and an explanation of any gap>
 
-- Going beyond previous work, Transolver **calculates attention among learned physical states** instead of mesh points, which empowers the model with **endogenetic geometry-general capability**.
-- Transolver achieves **22% error reduction over previous SOTA in six standard benchmarks** and excels in **large-scale industrial simulations**, including car and airfoil designs.
-- Transolver presents favorable **efficiency, scalability and out-of-distrbution generalizability**.
+## 8. Troubleshooting log
+- nano segfault inside conda env: <what fixed it>
+- `--nb_epochs` was `type=float` in main_evaluation.py, changed to `type=int`
+  so the checkpoint path matches training.
+- <other issues>
 
-<p align="center">
-<img src=".\pic\Transolver.png" height = "250" alt="" align=center />
-<br><br>
-<b>Figure 1.</b> Overview of Transolver.
-</p>
+## 9. Repository layout
+<short tree>
 
-
-## Transolver v.s. Previous Transformer Operators
-
-**All of the previous Transformer-based neural operators directly apply attention to mesh points.** However, the massive mesh points in practical applications will cause challenges in both computation cost and capturing physical correlations.
-
-Transolver is based on a more foundational idea, that is **learning intrinsic physical states under complex geometrics**. This design frees our model from superficial and unwieldy meshes and focuses more on physics modeling.
-
-As shown below, **Transolver can precisely capture miscellaneous physical states of PDEs**, such as (a) various fluid-structure interactions in a Darcy flow, (b) different extrusion regions of elastic materials, (c) shock wave and wake flow around the airfoil, (d) front-back surfaces and up-bottom spaces of driving cars.
-
-<p align="center">
-<img src=".\pic\physical_states.png" height = "300" alt="" align=center />
-<br><br>
-<b>Figure 2.</b> Visualization of learned physical states.
-</p>
-
-## Get Started
-
-1. Please refer to different folders for detailed experiment instructions.
-
-2. List of experiments:
-
-- Core code: see [./Physics_Attention.py](https://github.com/thuml/Transolver/blob/main/Physics_Attention.py)
-- Standard benchmarks: see [./PDE-Solving-StandardBenchmark](https://github.com/thuml/Transolver/tree/main/PDE-Solving-StandardBenchmark)
-- Car design task: see [./Car-Design-ShapeNetCar](https://github.com/thuml/Transolver/tree/main/Car-Design-ShapeNetCar)
-- Airfoil design task: see [./Airfoil-Design-AirfRANS](https://github.com/thuml/Transolver/tree/main/Airfoil-Design-AirfRANS)
-
-## Results
-
-Transolver achieves consistent state-of-the-art in **six standard benchmarks and two practical design tasks**. **More than 20 baselines are compared.**
-
-<p align="center">
-<img src=".\PDE-Solving-StandardBenchmark\fig\standard_benchmark.png" height = "300" alt="" align=center />
-<br><br>
-<b>Table 1.</b> Results on six standard benchmarks.
-</p>
-
-<p align="center">
-<img src=".\Airfoil-Design-AirfRANS\fig\results.png" height = "300" alt="" align=center />
-<br><br>
-<b>Table 2.</b> Results on two design tasks: Car and Airfoild design.
-</p>
-
-## Showcases
-
-<p align="center">
-<img src=".\pic\showcases.png" height = "300" alt="" align=center />
-<br><br>
-<b>Figure 3.</b> Comparison of Transolver and other models.
-</p>
-
-- Application of Transolver for crash dynamics modeling: [https://arxiv.org/pdf/2510.15201](https://arxiv.org/pdf/2510.15201)
-
-## Citation
-
-If you find this repo useful, please cite our paper. 
-
-```
-@inproceedings{wu2024Transolver,
-  title={Transolver: A Fast Transformer Solver for PDEs on General Geometries},
-  author={Haixu Wu and Huakun Luo and Haowen Wang and Jianmin Wang and Mingsheng Long},
-  booktitle={International Conference on Machine Learning},
-  year={2024}
-}
-```
-
-## Contact
-
-If you have any questions or want to use the code, please contact [wuhx23@mails.tsinghua.edu.cn](mailto:wuhx23@mails.tsinghua.edu.cn).
-
-## Acknowledgement
-
-We appreciate the following github repos a lot for their valuable code base or datasets:
-
-https://github.com/neuraloperator/neuraloperator
-
-https://github.com/neuraloperator/Geo-FNO
-
-https://github.com/thuml/Latent-Spectral-Models
-
-https://github.com/Extrality/AirfRANS
+## Credits
+Code from thuml/Transolver (see LICENSE); this repo adds job scripts, logs, and documentation.
+Used Claude for README format and troubleshooting. Gemini for troubleshooting as well.
