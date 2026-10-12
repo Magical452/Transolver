@@ -164,3 +164,4 @@ data/
 *.pth
 *.zip
 *.tar.gaz
+Car-Design-ShapeNetCar/results/
